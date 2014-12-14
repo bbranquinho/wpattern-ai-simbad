@@ -1,0 +1,27 @@
+#======================================================
+# Maze
+#======================================================
+
+# Configure the maze (must be before define states). All fields are required.
+height       = 3
+width        = 4
+scale_factor = 3.0
+wall_height  = 0.5
+robot_height = 0.5
+start        = 2,0
+goal         = 0,3
+
+# Movements of each state
+s(0,0) = SOUTH, EAST
+s(0,1) = WEST, EAST
+s(0,2) = WEST, SOUTH, EAST
+s(0,3) = WEST, SOUTH
+
+s(1,0) = NORTH, SOUTH
+s(1,2) = NORTH, SOUTH, EAST
+s(1,3) = NORTH, WEST
+
+s(2,0) = NORTH, EAST
+s(2,1) = WEST, EAST
+s(2,2) = NORTH, WEST, EAST
+s(2,3) = NORTH, WEST
