@@ -2,11 +2,12 @@ package org.wpattern.ai.simbad.beans;
 
 import java.util.List;
 
-import org.wpattern.ai.simbad.utils.MovimentType;
+import org.wpattern.ai.simbad.RobotMotion;
+import org.wpattern.ai.simbad.utils.ActionType;
 
 public class MazeBean {
 
-	private List<MovimentType>[][] map;
+	private List<ActionType>[][] map;
 
 	private double scaleFactor;
 
@@ -21,6 +22,10 @@ public class MazeBean {
 	private StateBean start;
 
 	private StateBean goal;
+
+	private String robotClassname;
+
+	private RobotMotion robot;
 
 	public MazeBean() {
 	}
@@ -49,11 +54,11 @@ public class MazeBean {
 		this.robotHeight = robotHeight;
 	}
 
-	public List<MovimentType>[][] getMap() {
+	public List<ActionType>[][] getMap() {
 		return this.map;
 	}
 
-	public void setMap(List<MovimentType>[][] map) {
+	public void setMap(List<ActionType>[][] map) {
 		this.map = map;
 	}
 
@@ -87,6 +92,22 @@ public class MazeBean {
 
 	public void setGoal(StateBean goal) {
 		this.goal = goal;
+	}
+
+	public String getRobotClassname() {
+		return this.robotClassname;
+	}
+
+	public void setRobotClassname(String robotClassname) {
+		this.robotClassname = robotClassname;
+	}
+
+	public RobotMotion getRobot() {
+		return robot;
+	}
+
+	public void setRobot(RobotMotion robot) {
+		this.robot = robot;
 	}
 
 }

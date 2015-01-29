@@ -15,7 +15,9 @@ public abstract class RobotMotion extends Agent {
 
 	private MovimentBean currentMoviment;
 
-	private double movimentRatio = 1.0;
+	private double movimentRatio;
+
+	private boolean initiated;
 
 	public RobotMotion(Vector3d startPosition, String name) {
 		super(startPosition, name);
@@ -26,12 +28,15 @@ public abstract class RobotMotion extends Agent {
 		// Add sonars
 		RobotFactory.addSonarBeltSensor(this);
 
+		this.initiated = false;
+		this.movimentRatio = 1.0;
 		this.plan = new LinkedList<MovimentBean>();
 	}
 
 	@Override
 	protected final void initBehavior() {
 		this.init();
+		this.initiated = true;
 	}
 
 	public void setRadius(float radius) {
@@ -41,10 +46,19 @@ public abstract class RobotMotion extends Agent {
 	public void setHeight(float height) {
 		this.height = height;
 	}
+	@Override
+	protected void reset() {
+		super.reset();
+		this.initiated = false;
+	}
 
 	// Call cyclically (20 times per second) by the simulator engine.
 	@Override
 	protected final void performBehavior() {
+		if (!this.initiated) {
+			this.initBehavior();
+		}
+
 		if ((this.currentMoviment == null) && (this.plan.size() <= 0)) {
 			this.run();
 			return;

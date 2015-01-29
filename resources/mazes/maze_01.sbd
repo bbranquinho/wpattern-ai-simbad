@@ -3,13 +3,14 @@
 #======================================================
 
 # Configure the maze (must be before define states). All fields are required.
-height       = 3
-width        = 4
-scale_factor = 3.0
-wall_height  = 0.5
-robot_height = 0.5
-start        = 2,0
-goal         = 0,3
+height          = 3
+width           = 4
+scale_factor    = 3.0
+wall_height     = 0.5
+robot_height    = 0.5
+start           = 2,0
+goal            = 0,3
+robot_classname = org.wpattern.ai.simbad.robots.Robot
 
 # Movements of each state
 s(0,0) = SOUTH, EAST

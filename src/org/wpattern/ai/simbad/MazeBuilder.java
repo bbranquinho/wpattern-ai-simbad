@@ -1,11 +1,12 @@
 package org.wpattern.ai.simbad;
 
+import java.lang.reflect.Constructor;
+
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
 
 import org.wpattern.ai.simbad.beans.MazeBean;
-import org.wpattern.ai.simbad.robots.Robot;
-import org.wpattern.ai.simbad.utils.MovimentType;
+import org.wpattern.ai.simbad.utils.ActionType;
 
 import simbad.sim.Box;
 import simbad.sim.EnvironmentDescription;
@@ -13,6 +14,7 @@ import simbad.sim.EnvironmentDescription;
 public class MazeBuilder extends EnvironmentDescription {
 	private double scaleFactor;
 
+	@SuppressWarnings("unchecked")
 	public MazeBuilder(MazeBean maze) {
 		this.scaleFactor = maze.getScaleFactor();
 
@@ -45,10 +47,22 @@ public class MazeBuilder extends EnvironmentDescription {
 
 		Vector3d start = new Vector3d(maze.getStart().getLine() * this.scaleFactor - 1.5d * this.scaleFactor, 0,
 				1.5d * this.scaleFactor - maze.getStart().getColumn() * this.scaleFactor);
-		Robot robot = new Robot(start , "robot 1");
-		robot.setRadius((float) (this.scaleFactor / 4.0f));
-		robot.setHeight((float) maze.getRobotHeight());
-		this.add(robot);
+
+		try {
+			Class<RobotMotion> classs = (Class<RobotMotion>) Class.forName(maze.getRobotClassname());
+			Constructor<RobotMotion> constructor = classs.getConstructor(Vector3d.class, String.class);
+			RobotMotion robot = constructor.newInstance(start, "robot");
+
+			robot.setRadius((float) (this.scaleFactor / 4.0f));
+			robot.setHeight((float) maze.getRobotHeight());
+
+			this.add(robot);
+
+			maze.setRobot(robot);
+		} catch (Throwable e) {
+			System.err.println(String.format("Problem to instantiate the robot [%s].", e.getMessage()));
+			System.exit(-1);
+		}
 	}
 
 	@Override
@@ -69,19 +83,19 @@ public class MazeBuilder extends EnvironmentDescription {
 
 		for (int i = 0; i < maze.getMap().length; i++) {
 			for (int j = 0; j < maze.getMap()[i].length; j++) {
-				if ((maze.getMap()[i][j] != null) && maze.getMap()[i][j].contains(MovimentType.NORTH)) {
+				if ((maze.getMap()[i][j] != null) && maze.getMap()[i][j].contains(ActionType.NORTH)) {
 					walls[2 * i][j] = false;
 				}
 
-				if ((maze.getMap()[i][j] != null) && maze.getMap()[i][j].contains(MovimentType.WEST)) {
+				if ((maze.getMap()[i][j] != null) && maze.getMap()[i][j].contains(ActionType.WEST)) {
 					walls[2 * i + 1][j] = false;
 				}
 
-				if ((maze.getMap()[i][j] != null) && maze.getMap()[i][j].contains(MovimentType.SOUTH)) {
+				if ((maze.getMap()[i][j] != null) && maze.getMap()[i][j].contains(ActionType.SOUTH)) {
 					walls[2 * (i + 1)][j] = false;
 				}
 
-				if ((maze.getMap()[i][j] != null) && maze.getMap()[i][j].contains(MovimentType.EAST)) {
+				if ((maze.getMap()[i][j] != null) && maze.getMap()[i][j].contains(ActionType.EAST)) {
 					walls[2 * i + 1][j + 1] = false;
 				}
 			}

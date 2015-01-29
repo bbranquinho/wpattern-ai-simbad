@@ -1,16 +1,16 @@
 package org.wpattern.ai.simbad.beans;
 
-import org.wpattern.ai.simbad.utils.MovimentType;
+import org.wpattern.ai.simbad.utils.ActionType;
 
 public class MovimentBean {
 
-	private final MovimentType movimentType;
+	private final ActionType movimentType;
 
 	private final int startCounter;
 
 	private final int endCounter;
 
-	public MovimentBean(MovimentType movimentType, int startCounter, int endCounter) {
+	public MovimentBean(ActionType movimentType, int startCounter, int endCounter) {
 		super();
 		this.movimentType = movimentType;
 		this.startCounter = startCounter;
@@ -25,7 +25,7 @@ public class MovimentBean {
 		return this.startCounter;
 	}
 
-	public MovimentType getMovimentType() {
+	public ActionType getMovimentType() {
 		return movimentType;
 	}
 

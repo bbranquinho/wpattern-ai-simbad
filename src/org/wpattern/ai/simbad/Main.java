@@ -1,6 +1,7 @@
 package org.wpattern.ai.simbad;
 
 import org.wpattern.ai.simbad.beans.MazeBean;
+import org.wpattern.ai.simbad.loader.MazeLoader;
 
 import simbad.gui.Simbad;
 
