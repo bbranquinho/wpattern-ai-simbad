@@ -7,5 +7,7 @@
 	<classpathentry kind="lib" path="libs/vecmath.jar"/>
 	<classpathentry kind="lib" path="libs/j3dutils.jar"/>
 	<classpathentry kind="lib" path="libs/simbad.jar"/>
+	<classpathentry kind="lib" path="libs/miglayout-src.zip"/>
+	<classpathentry kind="lib" path="libs/miglayout15-swing.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
