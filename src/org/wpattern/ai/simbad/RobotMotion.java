@@ -1,10 +1,13 @@
 package org.wpattern.ai.simbad;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import javax.vecmath.Vector3d;
 
+import org.wpattern.ai.simbad.beans.MazeBean;
 import org.wpattern.ai.simbad.beans.MovimentBean;
+import org.wpattern.ai.simbad.utils.ActionType;
 
 import simbad.sim.Agent;
 import simbad.sim.RobotFactory;
@@ -19,7 +22,11 @@ public abstract class RobotMotion extends Agent {
 
 	private boolean initiated;
 
-	public RobotMotion(Vector3d startPosition, String name) {
+	private int currentLine, currentColumn;
+
+	private MazeBean maze;
+
+	public RobotMotion(MazeBean maze, Vector3d startPosition, String name) {
 		super(startPosition, name);
 
 		// Add camera
@@ -31,10 +38,14 @@ public abstract class RobotMotion extends Agent {
 		this.initiated = false;
 		this.movimentRatio = 1.0;
 		this.plan = new LinkedList<MovimentBean>();
+		this.currentLine = maze.getStart().getLine();
+		this.currentColumn = maze.getStart().getColumn();
+		this.maze = maze;
 	}
 
 	@Override
 	protected final void initBehavior() {
+		this.currentMoviment = null;
 		this.init();
 		this.initiated = true;
 	}
@@ -50,6 +61,7 @@ public abstract class RobotMotion extends Agent {
 	protected void reset() {
 		super.reset();
 		this.initiated = false;
+		this.currentMoviment = null;
 	}
 
 	// Call cyclically (20 times per second) by the simulator engine.
@@ -60,16 +72,19 @@ public abstract class RobotMotion extends Agent {
 		}
 
 		if ((this.currentMoviment == null) && (this.plan.size() <= 0)) {
-			this.run();
+			this.run(this.currentLine, this.currentColumn);
 			return;
 		}
 
 		if (this.currentMoviment == null) {
 			this.currentMoviment = this.plan.removeFirst();
-			this.executeMoviment(this.currentMoviment);
+			this.currentMoviment.setStartCounter(this.getCounter());
+			this.currentMoviment.setEndCounter(this.getCounter() + 20);
 		}
 
-		if (this.getCounter() > this.currentMoviment.getEndCounter()) {
+		if (this.getCounter() <= this.currentMoviment.getEndCounter()) {
+			this.executeMoviment(this.currentMoviment);
+		} else {
 			this.stopMoviment(this.currentMoviment);
 			this.currentMoviment = null;
 		}
@@ -77,25 +92,80 @@ public abstract class RobotMotion extends Agent {
 
 	private void executeMoviment(MovimentBean moviment) {
 		System.out.println(String.format("Start moviment [%s].", moviment.getMovimentType()));
+
+		System.out.println(this.getCounter());
+
+		//this.setTranslationalVelocity(0.1f);
+		this.setRotationalVelocity(1.0f);
 	}
 
 	private void stopMoviment(MovimentBean moviment) {
 		System.out.println(String.format("Stop moviment [%s].", moviment.getMovimentType()));
 		this.setTranslationalVelocity(0.0f);
-		this.setTranslationalVelocity(0.0f);
+		this.setRotationalVelocity(0.0f);
 	}
 
 	public abstract void init();
 
-	public abstract void run();
+	public abstract void run(int line, int column);
 
-	public void moveNorth() {}
+	static boolean oi = false;
 
-	public void moveWest() {}
+	public void move(ActionType action) {
+		if (!oi) {
+			oi = true;
+			this.plan.add(new MovimentBean(ActionType.NORTH));
+			return;
+		}
 
-	public void moveSouth() {}
+		//		switch (action) {
+		//		case NORTH:
+		//			this.moveNorth();
+		//			break;
+		//
+		//		case WEST:
+		//			this.moveWest();
+		//			break;
+		//
+		//		case SOUTH:
+		//			this.moveSouth();
+		//			break;
+		//
+		//		case EAST:
+		//			this.moveEast();
+		//			break;
+		//
+		//		case STAY:
+		//			// Do nothing.
+		//			break;
+		//		}
+	}
 
-	public void moveEast() {}
+	public void addPlan(List<ActionType> plan) {
+		for (ActionType action : plan) {
+			this.plan.add(new MovimentBean(action));
+		}
+	}
+
+	public void cleaPlan() {
+		this.plan.clear();
+	}
+
+	public void moveNorth() {
+		this.plan.add(new MovimentBean(ActionType.NORTH));
+	}
+
+	public void moveWest() {
+		this.plan.add(new MovimentBean(ActionType.WEST));
+	}
+
+	public void moveSouth() {
+		this.plan.add(new MovimentBean(ActionType.SOUTH));
+	}
+
+	public void moveEast() {
+		this.plan.add(new MovimentBean(ActionType.EAST));
+	}
 
 	public double getMovimentRatio() {
 		return this.movimentRatio;

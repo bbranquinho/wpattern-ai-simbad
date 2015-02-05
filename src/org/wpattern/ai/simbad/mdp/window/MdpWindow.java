@@ -30,7 +30,6 @@ public class MdpWindow {
 
 		if (maze.getRobot() instanceof IRobotMdp) {
 			((IRobotMdp)maze.getRobot()).setMdp(mdp);
-			((IRobotMdp)maze.getRobot()).setMaze(maze);
 			((IRobotMdp)maze.getRobot()).registerListener(policyWindow);
 			((IRobotMdp)maze.getRobot()).registerListener(valueWindow);
 		}

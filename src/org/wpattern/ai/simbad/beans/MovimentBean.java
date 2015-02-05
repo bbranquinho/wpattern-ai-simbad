@@ -6,9 +6,14 @@ public class MovimentBean {
 
 	private final ActionType movimentType;
 
-	private final int startCounter;
+	private int startCounter;
 
-	private final int endCounter;
+	private int endCounter;
+
+	public MovimentBean(ActionType movimentType) {
+		super();
+		this.movimentType = movimentType;
+	}
 
 	public MovimentBean(ActionType movimentType, int startCounter, int endCounter) {
 		super();
@@ -17,16 +22,24 @@ public class MovimentBean {
 		this.endCounter = endCounter;
 	}
 
-	public int getEndCounter() {
-		return this.endCounter;
-	}
-
 	public int getStartCounter() {
 		return this.startCounter;
 	}
 
+	public void setStartCounter(int startCounter) {
+		this.startCounter = startCounter;
+	}
+
+	public int getEndCounter() {
+		return this.endCounter;
+	}
+
+	public void setEndCounter(int endCounter) {
+		this.endCounter = endCounter;
+	}
+
 	public ActionType getMovimentType() {
-		return movimentType;
+		return this.movimentType;
 	}
 
 }

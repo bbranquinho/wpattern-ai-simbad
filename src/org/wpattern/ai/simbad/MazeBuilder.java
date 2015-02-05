@@ -50,8 +50,8 @@ public class MazeBuilder extends EnvironmentDescription {
 
 		try {
 			Class<RobotMotion> classs = (Class<RobotMotion>) Class.forName(maze.getRobotClassname());
-			Constructor<RobotMotion> constructor = classs.getConstructor(Vector3d.class, String.class);
-			RobotMotion robot = constructor.newInstance(start, "robot");
+			Constructor<RobotMotion> constructor = classs.getConstructor(MazeBean.class, Vector3d.class, String.class);
+			RobotMotion robot = constructor.newInstance(maze, start, "robot");
 
 			robot.setRadius((float) (this.scaleFactor / 4.0f));
 			robot.setHeight((float) maze.getRobotHeight());
